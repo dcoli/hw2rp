@@ -1,0 +1,31 @@
+=> Booting WEBrick
+=> Rails 3.1.0 application starting in development on http://0.0.0.0:3000
+=> Call with -d to detach
+=> Ctrl-C to shutdown server
+
+
+Started GET "/movies" for 127.0.0.1 at 2012-06-04 19:51:59 -0400
+  Processing by MoviesController#index as HTML
+  [1m[36mMovie Load (0.6ms)[0m  [1mSELECT "movies".* FROM "movies" [0m
+Rendered movies/index.html.haml within layouts/application (58.5ms)
+Compiled application.css  (0ms)  (pid 5101)
+Compiled application.js  (41ms)  (pid 5101)
+Compiled jquery.js  (16ms)  (pid 5101)
+Compiled jquery_ujs.js  (15ms)  (pid 5101)
+Completed 200 OK in 671ms (Views: 668.4ms | ActiveRecord: 1.1ms)
+
+
+Started GET "/assets/application.css?body=1" for 127.0.0.1 at 2012-06-04 19:52:03 -0400
+Served asset /application.css - 304 Not Modified (125ms)
+
+
+Started GET "/assets/jquery.js?body=1" for 127.0.0.1 at 2012-06-04 19:52:03 -0400
+Served asset /jquery.js - 304 Not Modified (16ms)
+
+
+Started GET "/assets/jquery_ujs.js?body=1" for 127.0.0.1 at 2012-06-04 19:52:03 -0400
+Served asset /jquery_ujs.js - 304 Not Modified (18ms)
+
+
+Started GET "/assets/application.js?body=1" for 127.0.0.1 at 2012-06-04 19:52:03 -0400
+Served asset /application.js - 304 Not Modified (42ms)
