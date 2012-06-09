@@ -2,6 +2,9 @@ class MoviesController < ApplicationController
 
   attr_accessor :hilite_title
   attr_accessor :hilite_release_date
+  attr_accessor :all_ratings
+
+  #self.all_ratings = Movie.get_ratings
 
   def show
     id = params[:id] # retrieve movie ID from URI route
@@ -10,6 +13,7 @@ class MoviesController < ApplicationController
   end
 
   def index
+    self.all_ratings = Movie.get_ratings
     if(params[:sortby]=='title')
       self.hilite_title = true
       self.hilite_release_date = false
@@ -22,6 +26,17 @@ class MoviesController < ApplicationController
       self.hilite_title = false
       self.hilite_release_date = false
       @movies = Movie.all
+    end
+    if params[:ratings] != nil
+      @movies = @movies.select do |m|
+        match = false
+        params[:ratings].keys.each do |r|
+          if m[:rating]==r
+            match = true
+          end
+        end
+        match
+      end
     end
   end
 
