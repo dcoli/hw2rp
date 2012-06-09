@@ -4,9 +4,15 @@
 %table#movies
   %thead
     %tr
-      %th Movie Title
+      - if(@hilite_title)
+        %th.hilite= link_to 'Movie Title', movies_path, :id => 'title_header'
+      - else
+        %th= link_to 'Movie Title', movies_path({:sortby=>'title'}), :id => 'title_header'
       %th Rating
-      %th Release Date
+      - if(@hilite_release_date)
+        %th.hilite= link_to 'Release Date', movies_path, :id => 'release_date_header'
+      - else
+        %th= link_to 'Release Date', movies_path({:sortby=>'release_date'}), :id => 'release_date_header'
       %th More Info
   %tbody
     - @movies.each do |movie|
