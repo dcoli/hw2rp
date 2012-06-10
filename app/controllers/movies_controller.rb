@@ -12,36 +12,93 @@ class MoviesController < ApplicationController
   end
 
   def index
+    #debugger
     self.all_ratings = Movie.get_ratings
-    if(params[:sortby]=='title')
-      self.hilite_title = true
-      self.hilite_release_date = false
-      @movies = Movie.order("title asc")
-    elsif(params[:sortby]=='release_date')
-      self.hilite_title = false
-      self.hilite_release_date = true
-      @movies = Movie.order("release_date asc")
+    u = URI.parse(request.env["REQUEST_URI"])
+    redirect = false
+    #debugger
+    #check if params
+    puts "sortby=" << params[:sortby].to_s
+    puts "ratings=" << params[:ratings].to_s
+    #default path but session variables present
+    if ( u.query == "" ) and ( session[:sortby] or session[:ratings] )
+      #debugger
+      flash[:alert]="using session variables for new index"
+      flash.keep
+      redirect_to get_redirect_string
+    elsif ((params[:sortby] and params[:sortby] != "") or (params[:ratings] and params[:ratings].first != nil))
+      #check if new sortby
+      if params[:sortby] != session[:sortby]
+         session[:sortby] = params[:sortby]
+        flash[:alert]="resetting session variables"
+        redirect = true
+      end
+      #check if new ratings
+      if params[:ratings] != session[:ratings]
+        session[:ratings] = params[:ratings]
+        flash[:alert]="resetting session variables"
+        redirect = true
+      end
+      if redirect
+        redirect_to get_redirect_string
+      end
+
+      #process params
+      flash[:alert]="processing params"
+      #debugger
+      if(session[:sortby]=='title')
+        self.hilite_title = true
+        self.hilite_release_date = false
+        @movies = Movie.order("title asc")
+      elsif(session[:sortby]=='release_date')
+        self.hilite_title = false
+        self.hilite_release_date = true
+        @movies = Movie.order("release_date asc")
+      else
+        self.hilite_title = false
+        self.hilite_release_date = false
+        @movies = Movie.all
+      end
+      if session[:ratings] != nil and session[:ratings].first != nil
+        @movies = @movies.select do |m|
+          match = false
+          session[:ratings].keys.each do |r|
+            if m[:rating]==r
+              match = true
+            end
+          end
+          match
+        end
+        self.selected_params = ""
+        session[:ratings].each do |r|
+          self.selected_params << "&ratings[#{r[0]}]=1"
+        end
+      end
+
+    #default path no session
     else
       self.hilite_title = false
       self.hilite_release_date = false
       @movies = Movie.all
     end
-    if params[:ratings] != nil
-      @movies = @movies.select do |m|
-        match = false
-        params[:ratings].keys.each do |r|
-          if m[:rating]==r
-            match = true
-          end
-        end
-        match
-      end
-      self.selected_params = ""
-      params[:ratings].each do |r|
-        self.selected_params << "&ratings[#{r[0]}]=1"
+  end
+
+  def get_redirect_string
+    redirect_string = ""
+    if session[:sortby] == nil or session[:sortby].first == nil
+      sortby_string = ''
+    else
+      sortby_string = 'sortby=' << session[:sortby]
+    end
+    ratings_string = ''
+    if session[:ratings] != nil
+      session[:ratings].each do |r|
+        ratings_string << "&ratings[#{r[0]}]=#{r[1]}"
       end
     end
+    redirect_string = "/movies?" << sortby_string << ratings_string
   end
+
 
   def index_by_title
     self.hilite_title = true
