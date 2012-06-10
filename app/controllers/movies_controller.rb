@@ -21,7 +21,7 @@ class MoviesController < ApplicationController
     puts "sortby=" << params[:sortby].to_s
     puts "ratings=" << params[:ratings].to_s
     #default path but session variables present
-    if ( u.query == "" ) and ( session[:sortby] or session[:ratings] )
+    if ( u.query == nil or u.query == "" ) and ( session[:sortby] or session[:ratings] )
       #debugger
       flash[:alert]="using session variables for new index"
       flash.keep
