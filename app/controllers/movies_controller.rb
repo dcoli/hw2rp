@@ -3,8 +3,7 @@ class MoviesController < ApplicationController
   attr_accessor :hilite_title
   attr_accessor :hilite_release_date
   attr_accessor :all_ratings
-
-  #self.all_ratings = Movie.get_ratings
+  attr_accessor :selected_params
 
   def show
     id = params[:id] # retrieve movie ID from URI route
@@ -36,6 +35,10 @@ class MoviesController < ApplicationController
           end
         end
         match
+      end
+      self.selected_params = ""
+      params[:ratings].each do |r|
+        self.selected_params << "&ratings[#{r[0]}]=1"
       end
     end
   end
